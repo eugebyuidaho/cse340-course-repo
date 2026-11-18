@@ -7,11 +7,13 @@
            <% projects.forEach(project => { %>
            <li>
                <%= new Date(project.project_date).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric', timeZone: 'UTC' }) %>:
-               <strong><a href="/project/<%= project.project_id %>"><%= project.title %></a></strong>
+               <strong><a href="/projects/<%= project.project_id %>"><%= project.title %></a></strong>
                (<a href="/organizations/<%= project.organization_id %>"><%= project.organization_name %></a>)
            </li>
            <% }); %>
        </ul>
+
+       <p><a href="/new-project">Add a New Service Project</a></p>
 
    </main>
 
