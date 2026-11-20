@@ -11,18 +11,6 @@ const getAllCategories = async() => {
     return result.rows;
 }
 
-const getCategoryById = async (id) => {
-    const query = `
-        SELECT category_id, name
-        FROM public.category
-        WHERE category_id = $1;
-    `;
-
-    const queryParams = [id];
-    const result = await db.query(query, queryParams);
-
-    return result.rows[0];
-}
 
 const getCategoriesByProjectId = async (projectId) => {
     const query = `
@@ -38,6 +26,54 @@ const getCategoriesByProjectId = async (projectId) => {
     const result = await db.query(query, queryParams);
 
     return result.rows;
+}
+
+const getCategoryById = async (id) => {
+    const query = `
+        SELECT category_id, name
+        FROM public.category
+        WHERE category_id = $1;
+    `;
+
+    const queryParams = [id];
+    const result = await db.query(query, queryParams);
+
+    return result.rows[0];
+}
+
+const createCategory = async (name) => {
+    const query = `
+        INSERT INTO category (name)
+        VALUES ($1)
+        RETURNING category_id;
+    `;
+
+    const queryParams = [name];
+    const result = await db.query(query, queryParams);
+
+    if (result.rows.length === 0) {
+        throw new Error('Failed to create category');
+    }
+
+    return result.rows[0].category_id;
+}
+
+const updateCategory = async (categoryId, name) => {
+    const query = `
+        UPDATE category
+        SET name = $1
+        WHERE category_id = $2
+        RETURNING category_id;
+    `;
+
+    const queryParams = [name, categoryId];
+    const result = await db.query(query, queryParams);
+
+    if (result.rows.length === 0) {
+        throw new Error('Failed to update category');
+    }
+
+    return result.rows[0].category_id;
 }
 
 const getProjectsByCategoryId = async (categoryId) => {
@@ -80,4 +116,6 @@ const updateCategoryAssignments = async(projectId, categoryIds) => {
     }
 }
 
-export { getAllCategories, getCategoryById, getCategoriesByProjectId, getProjectsByCategoryId, updateCategoryAssignments };
+
+
+export { getAllCategories, getCategoryById, getCategoriesByProjectId, getProjectsByCategoryId, updateCategoryAssignments, createCategory, updateCategory };
