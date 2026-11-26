@@ -5,6 +5,7 @@ import {showOrganizationsPage, showOrganizationDetailsPage, showNewOrganizationF
 import { showProjectsPage, showProjectDetailsPage, showNewProjectForm, processNewProjectForm, projectValidation, showEditProjectForm, processEditProjectForm } from './controllers/projects.js';
 import { showCategoriesPage, showCategoryDetailsPage, showAssignCategoriesForm, processAssignCategoriesForm, categoryValidation, showNewCategoryForm, processNewCategoryForm, showEditCategoryForm, processEditCategoryForm } from './controllers/categories.js';
 import { testErrorPage } from './controllers/errors.js';
+import { showUserRegistrationForm, processUserRegistrationForm, showLoginForm, processLoginForm, processLogout, requireLogin, showDashboard} from './controllers/users.js';
 
 const router = express.Router();
 
@@ -27,6 +28,14 @@ router.get('/edit-organization/:id', showEditOrganizationForm);
 // Route for new project page
 router.get('/new-project', showNewProjectForm);
 
+//Protected route for dashboard
+router.get('/dashboard', requireLogin, showDashboard);
+
+// Login and logout routes
+router.get('/login', showLoginForm);
+router.post('/login', processLoginForm);
+router.get('/logout', processLogout);
+
 //Route to handle the assign categories form
 router.get('/assign-categories/:projectId', showAssignCategoriesForm);
 router.post('/assign-categories/:projectId', processAssignCategoriesForm);
@@ -43,6 +52,10 @@ router.post('/new-category', categoryValidation, processNewCategoryForm);
 
 router.get('/edit-category/:id', showEditCategoryForm);
 router.post('/edit-category/:id', categoryValidation, processEditCategoryForm)
+
+// User registration routes
+router.get('/register', showUserRegistrationForm);
+router.post('/register', processUserRegistrationForm);
 
 // Route to handle new project form submission
 router.post('/new-project', projectValidation, processNewProjectForm); 
